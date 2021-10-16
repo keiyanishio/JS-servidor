@@ -21,7 +21,7 @@ axios.post(link+'/token', data,{
     axios.get('https://tecweb-js.insper-comp.com.br/exercicio',{headers : headers})
     .then((response)=>{
       const ex = response.data;
-      //console.log(ex['ano'])
+      //console.log(ex['conta-palindromos'])
       axios.post('https://tecweb-js.insper-comp.com.br/exercicio/soma', soma(ex.soma.entrada.a, ex.soma.entrada.b), {headers:headers})
       axios.post('https://tecweb-js.insper-comp.com.br/exercicio/tamanho-string', tamanho(ex['tamanho-string'].entrada.string), {headers:headers})
       axios.post('https://tecweb-js.insper-comp.com.br/exercicio/nome-do-usuario', usuario(ex['nome-do-usuario'].entrada.email), {headers:headers})
@@ -30,6 +30,11 @@ axios.post(link+'/token', data,{
       axios.post('https://tecweb-js.insper-comp.com.br/exercicio/volume-da-pizza', pizza(ex['volume-da-pizza'].entrada.z, ex['volume-da-pizza'].entrada.a), {headers:headers})
       axios.post('https://tecweb-js.insper-comp.com.br/exercicio/mru', mru(ex.mru.entrada.s0, ex.mru.entrada.v, ex.mru.entrada.t), {headers:headers})
       axios.post('https://tecweb-js.insper-comp.com.br/exercicio/inverte-string', inverse(ex['inverte-string'].entrada.string), {headers:headers})
+      axios.post('https://tecweb-js.insper-comp.com.br/exercicio/soma-valores', valores(ex['soma-valores'].entrada.objeto), {headers:headers})
+      axios.post('https://tecweb-js.insper-comp.com.br/exercicio/n-esimo-primo', primo(ex['n-esimo-primo'].entrada.n), {headers:headers})
+      //axios.post('https://tecweb-js.insper-comp.com.br/exercicio/maior-prefixo-comum', prefixo(ex['maior-prefixo-comum'].entrada.strings), {headers:headers})
+      axios.post('https://tecweb-js.insper-comp.com.br/exercicio/soma-segundo-maior-e-menor-numeros', soma2(ex['soma-segundo-maior-e-menor-numeros'].entrada.numeros), {headers:headers})
+      axios.post('https://tecweb-js.insper-comp.com.br/exercicio/conta-palindromos', palindromo(ex['conta-palindromos'].entrada.palavras), {headers:headers})
     })
     
     console.log(headers);
@@ -59,7 +64,7 @@ function usuario(email){
 function jaca(v, theta){
   g = 9.8;
   radiano = (theta/180)*Math.PI;
-  dis=(((v**2)*Math.sin(2*radiano))/2);
+  dis=(((v**2)*Math.sin(2*radiano))/g);
   if (dis<98){
     res=-1;
   }else if(dis>102){
@@ -91,5 +96,85 @@ function mru(s0, v, t){
 
 function inverse(string){
   return {'resposta': string.split("").reverse().join("")}
+}
 
+function valores(objeto){
+  total = 0;
+  for (const value of Object.values(objeto)) {
+    total+=value;
+  }
+  return {'resposta': total}
+}
+
+
+function detecta_primo(num){
+  prime = true;
+  for (let i = 2; i < num; i++) {
+    if (num % i == 0) {
+        prime = false;
+    }
+  }
+  return prime
+}
+
+
+function primo(n){
+  const primos=[];
+  i=2;
+  while (primos.length!=n){
+    if (detecta_primo(i)){
+      primos.push(i);
+    }
+    i++;
+  }
+  return {'resposta':primos[n-1]}
+}
+
+
+// function prefixo(strings){
+//   var lista =[];
+//   console.log(strings.length)
+//   var a=strings.splice(0,strings.length-1) 
+//   console.log(a)
+//   for (let i =0 ;i<strings.length;i++){
+//     const str1=a[i].split("");
+//     console.log(a[i])
+//     const str2=a[i+1].split("");
+//     for (var j=0; j<str1.length;j++){
+//       if (str1[j]==str2[j]){
+//         letra=str1[j];
+//         lista.push(letra);
+
+//       }
+//     }
+//   }
+
+//   console.log(lista)
+//   return {'resposta': lista.join("")}
+// }
+
+function soma2(numeros){
+  numeros.sort(function(a, b) {
+    return a - b;
+  });
+
+  menor=numeros[1];
+  maior=numeros[numeros.length-2];
+
+  total=maior+menor;
+  
+  return {'resposta':total}
+
+  
+}
+
+function palindromo(palavras){
+  total=0;
+  for (var i=0;i<palavras.length;i++){
+    reverso = palavras[i].split("").reverse().join('');
+    if (palavras[i]==reverso){
+      total++;
+    }
+  }
+  return {'resposta':total}
 }
